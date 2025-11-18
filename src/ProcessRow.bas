@@ -1,14 +1,14 @@
-Attribute VB_Name = "modProcesarFila"
+Attribute VB_Name = "ProcessRow"
 Option Explicit
 
 ' =====================================================================
 ' Procesamiento de una fila individual de la hoja BASE.
 ' =====================================================================
 
-Public Sub ProcesarFila( _
+Public Sub RowProcessing( _
     ByVal outlookApp As Object, _
     ByVal fso As Object, _
-    ByVal carpetaArchivos As Object, _
+    ByVal pathFiles As Object, _
     ByVal ws As Worksheet, _
     ByVal rowIndex As Long, _
     ByVal modo As String, _
@@ -17,7 +17,7 @@ Public Sub ProcesarFila( _
 
     On Error GoTo ERR_FILA
 
-    Dim templatePath As String, completeTemplate As String
+    Dim templatePath As String, fullTemplate As String
     Dim mail As Object
     Dim expectedFiles As Collection
     Dim fileObj As Object
@@ -39,24 +39,24 @@ Public Sub ProcesarFila( _
 
     ' Resolver ruta
     If fso.FileExists(templatePath) Then
-        completeTemplate = templatePath
+        fullTemplate = templatePath
     Else
-        completeTemplate = DEFAULT_TEMPLATE_DIR & templatePath
+        fullTemplate = DEFAULT_TEMPLATE_DIR & templatePath
     End If
 
-    If Not fso.FileExists(completeTemplate) Then
-        MsgBox "Fila " & rowIndex & ": Plantilla no encontrada: " & vbCrLf & completeTemplate, vbExclamation
+    If Not fso.FileExists(fullTemplate) Then
+        MsgBox "Fila " & rowIndex & ": Plantilla no encontrada: " & vbCrLf & fullTemplate, vbExclamation
         Exit Sub
     End If
 
     ' Crear correo
-    Set mail = outlookApp.CreateItemFromTemplate(completeTemplate)
+    Set mail = outlookApp.CreateItemFromTemplate(fullTemplate)
 
     ' Archivos esperados
     Set expectedFiles = StringToCollection(CStr(ws.Cells(rowIndex, 1).Value))
 
     ' Adjuntar archivos
-    For Each fileObj In carpetaArchivos.Files
+    For Each fileObj In pathFiles.Files
         fileBase = fso.GetBaseName(fileObj.Path)
         If Contains(expectedFiles, fileBase) Then
             mail.Attachments.Add fileObj.Path
@@ -68,6 +68,12 @@ Public Sub ProcesarFila( _
         Exit Sub
     End If
 
+    ' Validación de destinatario
+    If Trim$(ws.Cells(rowIndex, 2).Value) = "" Then
+        MsgBox "Fila " & rowIndex & ": Falta destinatario.", vbExclamation
+        Exit Sub
+    End If
+
     ' Completar campos básicos
     mail.To = ws.Cells(rowIndex, 2).Value
     mail.CC = ws.Cells(rowIndex, 3).Value
@@ -76,10 +82,10 @@ Public Sub ProcesarFila( _
 
     ' Variables dinámicas
     Set dictVars = DictVariablesFromRow(ws, rowIndex)
-    mail.HTMLBody = ApplyVariablesToHTMLBody(mail.HTMLBody, dictVars)
+    mail.HTMLBody = ApplyVariablesToHTMLProtected(mail.HTMLBody, dictVars)
 
     ' Enviar o mostrar
-    If UCase$(modo) = MODE_ENVIAR Then
+    If UCase$(modo) = MODE_SEND Then
         mail.Send
     Else
         mail.Display

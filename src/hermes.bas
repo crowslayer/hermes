@@ -1,4 +1,4 @@
-Attribute VB_Name = "modPrincipal"
+Attribute VB_Name = "hermes"
 Option Explicit
 
 ' =====================================================================
@@ -11,31 +11,31 @@ Option Explicit
 '   Control de flujo, selección de carpeta, control de retraso.
 ' =====================================================================
 
-Public Const MODE_ENVIAR As String = "ENVIAR"
-Public Const MODE_MOSTRAR As String = "MOSTRAR"
+Public Const MODE_SEND As String = "ENVIAR"
+Public Const MODE_DISPLAY As String = "MOSTRAR"
 Public Const DEFAULT_DELAY As Double = 5
-Public Const DEFAULT_TEMPLATE_DIR As String = "C:\Templates\"   ' Ajustable
+Public Const DEFAULT_TEMPLATE_DIR As String = "C:\Templates\" 
 
 ' Entrada: Vista previa
 Public Sub PROCESAR_PREVISUALIZAR()
-    ProcesarCorreos MODE_MOSTRAR
+    ProcessEmail MODE_DISPLAY
 End Sub
 
 ' Entrada: Envío automático
 Public Sub PROCESAR_ENVIAR()
-    ProcesarCorreos MODE_ENVIAR
+    ProcessEmail MODE_SEND
 End Sub
 
 ' ---------------------------------------------------------------------
 ' Control general del proceso
 ' ---------------------------------------------------------------------
-Public Sub ProcesarCorreos(ByVal modo As String)
+Public Sub ProcessEmail(ByVal modo As String)
 
     Dim fso As Object
     Dim dlgFolder As FileDialog
     Dim folderPath As String
     Dim outlookApp As Object
-    Dim carpetaArchivos As Object
+    Dim pathFiles As Object
 
     Dim delaySeconds As Double
     Dim i As Long, lastRow As Long
@@ -53,12 +53,12 @@ Public Sub ProcesarCorreos(ByVal modo As String)
     ' Crear objetos principales
     Set fso = CreateObject("Scripting.FileSystemObject")
     Set outlookApp = CreateObject("Outlook.Application")
-    Set carpetaArchivos = fso.GetFolder(folderPath)
+    Set pathFiles = fso.GetFolder(folderPath)
     Set ws = ThisWorkbook.Sheets("BASE")
 
     ' Retraso si es ENVIAR
-    If UCase$(modo) = MODE_ENVIAR Then
-        delaySeconds = ObtenerDelay()
+    If UCase$(modo) = MODE_SEND Then
+        delaySeconds = GetDelay()
     Else
         delaySeconds = 0
     End If
@@ -68,10 +68,10 @@ Public Sub ProcesarCorreos(ByVal modo As String)
     processed = 0
 
     For i = 2 To lastRow
-        ProcesarFila outlookApp, fso, carpetaArchivos, ws, i, modo, processed
+        RowProcessing outlookApp, fso, pathFiles, ws, i, modo, processed
 
         ' Retardo entre envíos
-        If modo = MODE_ENVIAR And delaySeconds > 0 Then
+        If modo = MODE_SEND And delaySeconds > 0 Then
             startTimer = Timer
             Do While Timer < startTimer + delaySeconds
                 DoEvents
@@ -94,21 +94,21 @@ End Sub
 ' ---------------------------------------------------------------------
 ' Pregunta el retraso entre envíos
 ' ---------------------------------------------------------------------
-Public Function ObtenerDelay() As Double
+Public Function GetDelay() As Double
     Dim inputValue As Variant
 
     If MsgBox("¿Deseas enviar los correos automáticamente?", vbYesNo + vbQuestion) = vbNo Then
-        ObtenerDelay = 0
+        delaySeconds = 0
         Exit Function
     End If
 
     inputValue = InputBox("¿Cuántos segundos deseas esperar entre cada envío?", "Retardo", DEFAULT_DELAY)
 
     If IsNumeric(inputValue) Then
-        ObtenerDelay = CDbl(inputValue)
+        delaySeconds = CDbl(inputValue)
     Else
-        ObtenerDelay = DEFAULT_DELAY
+        delaySeconds = DEFAULT_DELAY
     End If
 
-    MsgBox "Se aplicará un retraso de " & ObtenerDelay & " segundos.", vbInformation
+    MsgBox "Se aplicará un retraso de " & delaySeconds & " segundos.", vbInformation
 End Function

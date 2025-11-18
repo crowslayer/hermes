@@ -1,4 +1,4 @@
-# ✉️ Automatización de Envío de Correos con Excel + Outlook  
+# Automatización de Envío de Correos con Excel + Outlook  
 ### Envío masivo profesional con plantillas .OFT, variables dinámicas y adjuntos automáticos  
 **Autor:** Alex Herrera  
 **Licencia:** AGPLv3  
@@ -56,7 +56,7 @@ Diseñado para cargas reales de trabajo en empresas, contabilidad, cobranza, adm
 ---
 
 
-# 🧰 Requisitos
+# Requisitos
 
 - Windows 10 / 11  
 - Microsoft Excel  
@@ -87,7 +87,7 @@ Ejemplo de estructura recomendada:
 
 ---
 
-# 🧩 Uso de Variables Dinámicas
+# Uso de Variables Dinámicas
 
 En el encabezado colocas nombres:
 NOMBRE | FECHA | RFC | TOTAL | OBSERVACION
@@ -104,7 +104,7 @@ El motor reemplaza **todas las variables** automáticamente.
 
 ---
 
-# 📄 Plantillas .OFT
+# Plantillas .OFT
 
 Guarda tus plantillas desde Outlook:
 
