@@ -5,7 +5,7 @@
 
 ---
 
-# 📘 Tabla de Contenidos
+# Tabla de Contenidos
 
 - [Tabla de Contenidos](#-tabla-de-contenidos)
 - [Descripción General](#-descripción-general)
@@ -36,9 +36,8 @@ Este proyecto automatiza el envío de correos electrónicos personalizados usand
 - Variables dinámicas ilimitadas desde la hoja Excel
 - Control de envíos masivos con retardo configurable
 - Registro automático de procesamiento
-- Arquitectura modular optimizada para repositorios GitHub
 
-Diseñado para cargas reales de trabajo en empresas, contabilidad, cobranza, administración, soporte y facturación.
+Diseñado para cargas de trabajo en empresas, contabilidad, cobranza, administración, soporte y facturación.
 
 ---
 
@@ -51,7 +50,7 @@ Diseñado para cargas reales de trabajo en empresas, contabilidad, cobranza, adm
  **Modo previsualización y modo envío automático**  
  **Registro automático de procesamiento en columnas dinámicas**  
  **Compatible con miles de filas sin degradación de rendimiento**  
- **Código modular, limpio y profesional**
+ 
 
 ---
 
@@ -72,8 +71,8 @@ Ejemplo de estructura recomendada:
 
 | Columna | Contenido | Ejemplo |
 |--------|-----------|---------|
-| A | Nombres base de adjuntos (separados por \|) | factura01\|certificado |
-| B | Para | cliente@mail.com |
+| A | ADJUNTOS (separados por \|) | factura01\|certificado |
+| B | TO | cliente@mail.com |
 | C | CC | gerente@empresa.com |
 | D | BCC | auditor@empresa.com |
 | E | Asunto | Factura del mes |
@@ -126,11 +125,11 @@ Ejemplos:
 
 ### 1. Previsualizar correos
 
-PROCESAR_PREVISUALIZAR
+El sistema procesara cada fila y mostrara el borrador del correo. El usuario debera enviarlos manualmente.
+Esto es util para verificar que las variables están correctamente reemplazadas.
 
 
 ### 2. Enviar automáticamente
-
 
 El sistema te pedirá el retardo (en segundos) entre envíos.
 
@@ -145,8 +144,8 @@ El sistema te pedirá el retardo (en segundos) entre envíos.
 5. Abrir el archivo Excel que contiene la hoja **BASE**  
 6. Ejecutar macros:
 
-- `PROCESAR_PREVISUALIZAR`  
-- `PROCESAR_ENVIAR`  
+- `ProcessDisplay`  
+- `ProcessSend`  
 
 ---
 
@@ -154,10 +153,10 @@ El sistema te pedirá el retardo (en segundos) entre envíos.
 
 | Módulo | Rol |
 |--------|-----|
-| **modPrincipal.bas** | Lógica principal, control de flujo |
-| **modProcesarFila.bas** | Procesa cada fila (adjuntos, plantilla, envío) |
-| **modVariables.bas** | Construcción y aplicación de variables |
-| **modUtilidades.bas** | Funciones genéricas reutilizables |
+| **Hermes.bas** | Lógica principal, control de flujo |
+| **ProcessRow.bas** | Procesa cada fila (adjuntos, plantilla, envío) |
+| **Utils.bas** | Construcción y aplicación de variables |
+| **Variables.bas** | Funciones genéricas reutilizables |
 
 Esta arquitectura permite:
 
@@ -172,7 +171,7 @@ Esta arquitectura permite:
 
 ![Flujo del sistema](docs/diagramas/FlujoGeneral/FlujoGeneral.svg)
 
-![Flujo del sistema](docs/diagramas/Procesar/procesar.svg)
+![Flujo del proceso](docs/diagramas/Procesar/procesar.svg)
 ---
 
 # Ejemplo Práctico Completo

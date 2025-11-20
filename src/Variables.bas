@@ -1,7 +1,10 @@
-Attribute VB_Name = "Variables"
 Option Explicit
 
 ' =====================================================================
+' Author:  Domingo Herrera
+' Email:   crowslayer@gmail.com
+' License: GNU AGPLv3 <https://spdx.org/licenses/AGPL-3.0-or-later.html>
+'
 ' Manejo de variables dinámicas (diccionario de claves → valores).
 ' =====================================================================
 
@@ -15,10 +18,10 @@ Public Function DictVariablesFromRow(ws As Worksheet, rowIndex As Long) As Objec
 
     For col = 7 To lastCol
         key = Trim$(CStr(ws.Cells(1, col).Value))
-        value = ws.Cells(rowIndex, col).Value
+        value = ws.Cells(rowIndex, col).Text
 
         If Not dict.Exists("[" & UCase$(key) & "]") Then
-            dict.Add "[" & UCase$(key) & "]", CStr(ws.Cells(rowIndex, col).Value)
+            dict.Add "[" & UCase$(key) & "]", value
         End If
     Next col
 

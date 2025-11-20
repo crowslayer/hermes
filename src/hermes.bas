@@ -1,4 +1,3 @@
-Attribute VB_Name = "hermes"
 Option Explicit
 
 ' =====================================================================
@@ -15,14 +14,15 @@ Public Const MODE_SEND As String = "ENVIAR"
 Public Const MODE_DISPLAY As String = "MOSTRAR"
 Public Const DEFAULT_DELAY As Double = 5
 Public Const DEFAULT_TEMPLATE_DIR As String = "C:\Templates\" 
+Public Const DEFAULT_SHEET_NAME as String = "BASE"
 
 ' Entrada: Vista previa
-Public Sub PROCESAR_PREVISUALIZAR()
+Public Sub ProcessDisplay()
     ProcessEmail MODE_DISPLAY
 End Sub
 
 ' Entrada: Envío automático
-Public Sub PROCESAR_ENVIAR()
+Public Sub ProcessSend()
     ProcessEmail MODE_SEND
 End Sub
 
@@ -54,7 +54,9 @@ Public Sub ProcessEmail(ByVal modo As String)
     Set fso = CreateObject("Scripting.FileSystemObject")
     Set outlookApp = CreateObject("Outlook.Application")
     Set pathFiles = fso.GetFolder(folderPath)
-    Set ws = ThisWorkbook.Sheets("BASE")
+    
+    If Not ValidateSheet() Then Exit Sub
+    Set ws = ThisWorkbook.Sheets(DEFAULT_SHEET_NAME)
 
     ' Retraso si es ENVIAR
     If UCase$(modo) = MODE_SEND Then

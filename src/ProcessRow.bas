@@ -1,7 +1,9 @@
-Attribute VB_Name = "ProcessRow"
 Option Explicit
-
 ' =====================================================================
+' Author:  Domingo Herrera
+' Email:   crowslayer@gmail.com
+' License: GNU AGPLv3 <https://spdx.org/licenses/AGPL-3.0-or-later.html>
+'
 ' Procesamiento de una fila individual de la hoja BASE.
 ' =====================================================================
 
@@ -24,6 +26,7 @@ Public Sub RowProcessing( _
     Dim fileBase As String
     Dim dictVars As Object
     Dim colProc As Long, colDate As Long
+    Dim result As String
 
     ' Leer plantilla
     templatePath = Trim$(CStr(ws.Cells(rowIndex, 6).Value))
@@ -87,13 +90,15 @@ Public Sub RowProcessing( _
     ' Enviar o mostrar
     If UCase$(modo) = MODE_SEND Then
         mail.Send
+        result = "Email Sended"
     Else
         mail.Display
+        result = "Email Displayed"
     End If
 
     ' Columnas dinámicas para marcas
     GetStatusColumns ws, colProc, colDate
-    ws.Cells(rowIndex, colProc).Value = "Procesado"
+    ws.Cells(rowIndex, colProc).Value = result
     ws.Cells(rowIndex, colDate).Value = Now
 
     processedCount = processedCount + 1
