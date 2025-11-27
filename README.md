@@ -95,11 +95,7 @@ En la plantilla (HTML del .OFT):
 
 Hola [NOMBRE], tu factura del [FECHA] fue emitida por [TOTAL].
 
-
 El motor reemplaza **todas las variables** automáticamente.
-
-✔ No requiere modificar el código  
-✔ Puedes usar tantas como quieras  
 
 ---
 
@@ -160,10 +156,10 @@ El sistema te pedirá el retardo (en segundos) entre envíos.
 
 Esta arquitectura permite:
 
-✔ Mantenimiento fácil  
-✔ Extensión sin romper funciones  
-✔ Colaboración en proyectos GitHub  
-✔ Integración continua en futuro  
+- Mantenimiento fácil  
+- Extensión sin romper funciones  
+- Colaboración en proyectos GitHub  
+- Integración continua en futuro  
 
 ---
 
