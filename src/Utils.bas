@@ -128,35 +128,50 @@ Public Function ValidateSheet() As Boolean
     ValidateSheet = True
 End Function
 
-
+' Busqueda recursiva
 Public Function BuildFileIndex(folderObj As Object) As Object
 
     Dim dict As Object
+
+    Set dict = CreateObject("Scripting.Dictionary")
+
+    IndexFolder folderObj, dict
+
+    Set BuildFileIndex = dict
+   
+End Function
+
+Private Sub IndexFolder(ByVal folderObj As Object, ByRef dict As Object)
+
     Dim fileObj As Object
+    Dim subFolder As Object
     Dim fso As Object
     Dim fileKey As String
     Dim filesCol As Collection
 
-    Set dict = CreateObject("Scripting.Dictionary")
     Set fso = CreateObject("Scripting.FileSystemObject")
 
+    ' Archivos de la carpeta actual
     For Each fileObj In folderObj.Files
-    
+
         fileKey = UCase$(fso.GetBaseName(fileObj.Path))
-        
+
         If Not dict.Exists(fileKey) Then
 
             Set filesCol = New Collection
             dict.Add fileKey, filesCol
 
         End If
+
         dict(fileKey).Add fileObj.Path
-        'dict(UCase$(fso.GetBaseName(fileObj.Path))) = fileObj.Path
 
     Next fileObj
 
-    Set BuildFileIndex = dict
+    ' Recorrer subcarpetas
+    For Each subFolder In folderObj.SubFolders
+        IndexFolder subFolder, dict
+    Next subFolder
+
     Set fso = Nothing
 
-End Function
-
+End Sub
