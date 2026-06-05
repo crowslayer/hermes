@@ -1,13 +1,8 @@
 Option Explicit
 
 ' =====================================================================
-' Author:  Domingo Herrera
-' Email:   crowslayer@gmail.com
-' License: GNU AGPLv3 <https://spdx.org/licenses/AGPL-3.0-or-later.html>
-'
-' Manejo de variables dinámicas (diccionario de claves → valores).
+' Manejo de variables dinámicas (diccionario de claves ? valores).
 ' =====================================================================
-
 ' Carga todas las variables dinámicas desde la fila.
 Public Function DictVariablesFromRow(ws As Worksheet, rowIndex As Long) As Object
     Dim dict As Object: Set dict = CreateObject("Scripting.Dictionary")
@@ -17,7 +12,7 @@ Public Function DictVariablesFromRow(ws As Worksheet, rowIndex As Long) As Objec
     lastCol = ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
 
     For col = 7 To lastCol
-        key = Trim$(CStr(ws.Cells(1, col).Value))
+        key = Trim$(CStr(ws.Cells(1, col).value))
         value = ws.Cells(rowIndex, col).Text
 
         If Not dict.Exists("[" & UCase$(key) & "]") Then
@@ -35,7 +30,7 @@ Public Function ApplyVariablesToHTMLProtected(bodyHTML As String, dict As Object
     Dim i As Long, j As Long
 
     sorted = dict.Keys
-    ' Orden descendente por longitud → evita colisiones
+    ' Orden descendente por longitud ? evita colisiones
     For i = LBound(sorted) To UBound(sorted) - 1
         For j = i + 1 To UBound(sorted)
             If Len(sorted(j)) > Len(sorted(i)) Then

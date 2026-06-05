@@ -13,17 +13,16 @@ Option Explicit
 Public Const MODE_SEND As String = "ENVIAR"
 Public Const MODE_DISPLAY As String = "MOSTRAR"
 Public Const DEFAULT_DELAY As Double = 5
-Public Const DEFAULT_TEMPLATE_DIR As String = "C:\Templates\" 
-Public Const DEFAULT_SHEET_NAME as String = "BASE"
-Public Const DEFAULT_PAGE_SIZE As Long = 5
+Public Const DEFAULT_TEMPLATE_DIR As String = "C:\Templates\"
+Public Const DEFAULT_SHEET_NAME As String = "BASE"
 
 ' Entrada: Vista previa
-Public Sub ProcessDisplay()
+Public Sub PROCESAR_PREVISUALIZAR()
     ProcessEmail MODE_DISPLAY
 End Sub
 
 ' Entrada: Envío automático
-Public Sub ProcessSend()
+Public Sub PROCESAR_ENVIAR()
     ProcessEmail MODE_SEND
 End Sub
 
@@ -43,25 +42,36 @@ Public Sub ProcessEmail(ByVal modo As String)
     Dim processed As Long
     Dim startTimer As Double
     Dim ws As Worksheet
-    Dim pageSize As Long
-    Dim currentPageLimit As Long
-
+    Dim fileIndex As Object
+   
+   ' fix
+    Dim colStatus As Long
+    Dim colDate As Long
+    Dim startRow As Long
+    Dim statusValue As String
+   
     On Error GoTo ERR_HANDLER
-
+    
+    'Validando hoja base
     If Not ValidateSheet() Then Exit Sub
     Set ws = ThisWorkbook.Sheets(DEFAULT_SHEET_NAME)
-
+    
+    'Determindo longitud de columnas
+    GetStatusColumns ws, colStatus, colDate
+    
     ' Selección de carpeta
     Set dlgFolder = Application.FileDialog(msoFileDialogFolderPicker)
     If dlgFolder.Show <> -1 Then Exit Sub
     folderPath = dlgFolder.SelectedItems(1)
-
+    
     ' Crear objetos principales
     Set fso = CreateObject("Scripting.FileSystemObject")
     Set outlookApp = CreateObject("Outlook.Application")
     Set pathFiles = fso.GetFolder(folderPath)
     
-
+    'Listado de archivos
+    Set fileIndex = BuildFileIndex(pathFiles)
+    
     ' Retraso si es ENVIAR
     If UCase$(modo) = MODE_SEND Then
         delaySeconds = GetDelay()
@@ -72,15 +82,57 @@ Public Sub ProcessEmail(ByVal modo As String)
     ' Procesamiento por fila
     lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
     processed = 0
-
+    startRow = 0
+    
+    For i = 2 To lastRow
+        
+        statusValue = Trim$(UCase$(CStr(ws.Cells(i, colStatus).value)))
+    
+        If statusValue = "" _
+           Or statusValue = "PENDING" _
+           Or statusValue = "ERROR" _
+           Or statusValue = "DISPLAY" Then
+    
+            startRow = i
+            Exit For
+    
+        End If
+    
+    Next i
+    
+    If startRow = 0 Then
+    
+        MsgBox "No existen registros pendientes de procesar.", vbInformation
+    
+        GoTo CLEANUP
+    
+    End If
+        
+    Dim pageSize As Long
+    Dim currentPageLimit As Long
+    
     If modo = MODE_DISPLAY Then
         pageSize = InputBox("¿Cuántos correos deseas mostrar por página?", "Vista previa", 10)
-        If pageSize < 1 Then pageSize = DEFAULT_PAGE_SIZE
+        If pageSize < 1 Then pageSize = 10
         currentPageLimit = pageSize
     End If
 
-    For i = 2 To lastRow
-        RowProcessing outlookApp, fso, pathFiles, ws, i, modo, processed
+    For i = startRow To lastRow
+        'Saltando registros procesados
+        statusValue = Trim$(UCase$(CStr(ws.Cells(i, colStatus).value)))
+        If statusValue = "SENT" Then
+            GoTo NEXT_ROW
+        End If
+        
+        RowProcessing _
+            outlookApp, _
+            fso, _
+            fileIndex, _
+            ws, _
+            i, _
+            modo, _
+            processed
+
         ' Control de paginación
         If modo = MODE_DISPLAY Then
             If processed >= currentPageLimit Then
@@ -88,15 +140,25 @@ Public Sub ProcessEmail(ByVal modo As String)
                 currentPageLimit = currentPageLimit + pageSize
             End If
         End If
-
+        
         ' Retardo entre envíos
         If modo = MODE_SEND And delaySeconds > 0 Then
-            startTimer = Timer
-            Do While Timer < startTimer + delaySeconds
-                DoEvents
-            Loop
+            Application.Wait Now + TimeSerial(0, 0, delaySeconds)
         End If
+NEXT_ROW:
+
     Next i
+   
+' -------------------------
+' Limpieza
+' -------------------------
+CLEANUP:
+
+Set fileIndex = Nothing
+Set pathFiles = Nothing
+Set outlookApp = Nothing
+Set fso = Nothing
+Set dlgFolder = Nothing
 
     MsgBox "Proceso completado: " & processed & " correos procesados.", vbInformation
     Exit Sub
@@ -115,9 +177,10 @@ End Sub
 ' ---------------------------------------------------------------------
 Public Function GetDelay() As Double
     Dim inputValue As Variant
-
+    Dim delaySeconds As Double
+    
     If MsgBox("¿Deseas enviar los correos automáticamente?", vbYesNo + vbQuestion) = vbNo Then
-        delaySeconds = 0
+        GetDelay = 0
         Exit Function
     End If
 
@@ -130,4 +193,7 @@ Public Function GetDelay() As Double
     End If
 
     MsgBox "Se aplicará un retraso de " & delaySeconds & " segundos.", vbInformation
+    
+    GetDelay = delaySeconds
 End Function
+
