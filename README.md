@@ -1,35 +1,44 @@
-# Automatización de Envío de Correos con Excel + Outlook  
-### Envío masivo profesional con plantillas .OFT, variables dinámicas y adjuntos automáticos  
-**Autor:** Alex Herrera  
-**Licencia:** AGPLv3  
+# 📧 Hermes - Automatización de Correos con Excel + Outlook
+
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Version](https://img.shields.io/badge/version-1.0.3-green.svg)](CHANGELOG.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-blue.svg)]()
+[![VBA](https://img.shields.io/badge/Language-VBA-red.svg)]()
+
+**Envío masivo profesional con plantillas .OFT, variables dinámicas y adjuntos automáticos.**
+
+<p align="center">
+  <strong>🇪🇸 Español</strong> | <a href="README_EN.md">🇬🇧 English</a>
+</p>
 
 ---
 
-# Tabla de Contenidos
+## 📋 Tabla de Contenidos
 
-- [Tabla de Contenidos](#-tabla-de-contenidos)
-- [Descripción General](#-descripción-general)
-- [Características Principales](#-características-principales)
-- [Requisitos](#-requisitos)
-- [Estructura de la Hoja BASE (Excel)](#-estructura-de-la-hoja-base-excel)
-- [Uso de Variables Dinámicas](#-uso-de-variables-dinámicas)
-- [Plantillas .OFT](#-plantillas-oft)
-- [Modos de Ejecución](#-modos-de-ejecución)
+- [Descripción General](#descripción-general)
+- [Características Principales](#características-principales)
+- [Capturas de Pantalla](#capturas-de-pantalla)
+- [Requisitos](#requisitos)
+- [Estructura de la Hoja BASE](#estructura-de-la-hoja-base-excel)
+- [Variables Dinámicas](#uso-de-variables-dinámicas)
+- [Plantillas .OFT](#plantillas-oft)
+- [Modos de Ejecución](#modos-de-ejecución)
 - [Instalación y Configuración](#️-instalación-y-configuración)
-- [Arquitectura del Código](#-arquitectura-del-código)
-- [Flujo de Procesamiento](#-flujo-de-procesamiento)
-- [Ejemplo Práctico Completo](#-ejemplo-práctico-completo)
+- [Arquitectura del Código](#arquitectura-del-código)
+- [Flujo de Procesamiento](#flujo-de-procesamiento)
+- [Ejemplo Práctico Completo](#ejemplo-práctico-completo)
 - [Preguntas Frecuentes (FAQ)](#-preguntas-frecuentes-faq)
-- [Troubleshooting](#-troubleshooting)
-- [Licencia](#-licencia)
+- [Troubleshooting](#troubleshooting)
+- [Contribuir](#contribuir)
+- [Licencia](#licencia)
 - [Autor](#️-autor)
-- [Donaciones](#️-donaciones)
 
 ---
 
-#  Descripción General
+## Descripción General
 
-Este proyecto automatiza el envío de correos electrónicos personalizados usando **Excel + Outlook**, con soporte completo para:
+Hermes automatiza el envío de correos electrónicos personalizados usando **Excel + Outlook**, con soporte completo para:
 
 - Plantillas Outlook **.OFT**
 - Adjuntos automáticos basados en reglas por nombre
@@ -41,136 +50,143 @@ Diseñado para cargas de trabajo en empresas, contabilidad, cobranza, administra
 
 ---
 
-# Características Principales
+## Características Principales
 
- **Múltiples plantillas .OFT**  
- **Variables dinámicas ilimitadas**  
- **Adjuntos por coincidencia de nombre base**  
- **Envío seguro con retardo entre correos**  
- **Modo previsualización y modo envío automático**  
- **Registro automático de procesamiento en columnas dinámicas**  
- **Compatible con miles de filas sin degradación de rendimiento**  
- 
-
----
-
-
-# Requisitos
-
-- Windows 10 / 11  
-- Microsoft Excel  
-- Microsoft Outlook  
-- Macros habilitadas  
-- Permiso para automatización COM (según políticas de la empresa)
+| Característica | Descripción |
+|----------------|-------------|
+| ✅ Múltiples plantillas .OFT | Usa diferentes plantillas por fila |
+| ✅ Variables dinámicas ilimitadas | Cualquier columna se convierte en variable |
+| ✅ Adjuntos inteligentes | Detecta archivos por nombre base |
+| ✅ Envío seguro | Retardo configurable entre correos |
+| ✅ Modo previsualización | Revisa borradores antes de enviar |
+| ✅ Registro automático | Columnas de estado y fecha auto-creadas |
+| ✅ Alto rendimiento | Maneja miles de filas sin degradación |
 
 ---
 
-# Estructura de la Hoja BASE (Excel)
+## Capturas de Pantalla
 
-Ejemplo de estructura recomendada:
+| Menú Principal | Selección de Archivos | Resultados |
+|----------------|----------------------|------------|
+| ![Main](docs/images/main.png) | ![File Dialog](docs/images/file_dialog.png) | ![Results](docs/images/result_simple.png) |
+
+---
+
+## Requisitos
+
+| Requisito | Detalles |
+|-----------|----------|
+| SO | Windows 10 / 11 |
+| Software | Microsoft Excel + Microsoft Outlook |
+| Config | Macros habilitadas, permisos de automatización COM |
+
+---
+
+## Estructura de la Hoja BASE (Excel)
 
 | Columna | Contenido | Ejemplo |
-|--------|-----------|---------|
-| A | ADJUNTOS (separados por \|) | factura01\|certificado |
-| B | TO | cliente@mail.com |
-| C | CC | gerente@empresa.com |
-| D | BCC | auditor@empresa.com |
+|---------|-----------|---------|
+| A | ADJUNTOS (separados por `\|`) | `factura01\|certificado` |
+| B | TO | `cliente@mail.com` |
+| C | CC | `gerente@empresa.com` |
+| D | BCC | `auditor@empresa.com` |
 | E | Asunto | Factura del mes |
-| F | Plantilla | factura_cliente.oft |
+| F | Plantilla | `factura_cliente.oft` |
 | G→∞ | Variables dinámicas | NOMBRE, RFC, TOTAL, FECHA, etc. |
 
- **Las últimas dos columnas se agregan automáticamente:**
-
-- Estado de procesamiento  
-- Fecha/Hora  
+**Columnas auto-generadas:**
+- Estado de procesamiento (`Sent`, `Display`, `Error`)
+- Fecha/Hora de procesamiento
 
 ---
 
-# Uso de Variables Dinámicas
+## Uso de Variables Dinámicas
 
-En el encabezado colocas nombres:
+**Paso 1:** Define los encabezados de columna como nombres de variable:
+```
 NOMBRE | FECHA | RFC | TOTAL | OBSERVACION
+```
 
-En la plantilla (HTML del .OFT):
-
+**Paso 2:** Úsalos en tu plantilla .OFT (HTML):
+```html
 Hola [NOMBRE], tu factura del [FECHA] fue emitida por [TOTAL].
+```
 
-El motor reemplaza **todas las variables** automáticamente.
+**Resultado:** El motor reemplaza **todas las variables** automáticamente.
 
 ---
 
-# Plantillas .OFT
+## Plantillas .OFT
 
 Guarda tus plantillas desde Outlook:
 
 **Archivo → Guardar como → Plantilla Outlook (.oft)**
 
-Dentro puedes usar HTML, imágenes, estilos, tablas, firmas, etc.
+Las plantillas soportan HTML completo: imágenes, estilos, tablas, firmas, etc.
 
-Ejemplos:
-
+Ejemplos de variables:
+```
 [NOMBRE]
 [TOTAL]
 [FECHA_LIMITE]
 [PRODUCTO]
-
+```
 
 ---
 
-# Modos de Ejecución
+## Modos de Ejecución
 
 ### 1. Previsualizar correos
-
-El sistema procesara cada fila y mostrara el borrador del correo. El usuario debera enviarlos manualmente.
-Esto es util para verificar que las variables están correctamente reemplazadas.
-
+El sistema procesa cada fila y muestra el borrador del correo. El usuario los envía manualmente.
+- Útil para verificar que las variables están correctamente reemplazadas
+- Paginación interactiva entre páginas
 
 ### 2. Enviar automáticamente
-
 El sistema te pedirá el retardo (en segundos) entre envíos.
+- Envía todos los correos automáticamente
+- Control de tasa incorporado
 
 ---
 
-# Instalación y Configuración
+## Instalación y Configuración
 
-1. Abrir Excel  
-2. ALT + F11 (Visual Basic Editor)  
-3. Menú *Archivo → Importar archivo…*  
-4. Importar todos los `.bas` desde `/src`  
-5. Abrir el archivo Excel que contiene la hoja **BASE**  
+1. Abrir Excel
+2. Presionar `ALT + F11` (Editor de Visual Basic)
+3. Menú: *Archivo → Importar archivo…*
+4. Importar todos los `.bas` desde `/src`
+5. Abrir el archivo Excel que contiene la hoja **BASE**
 6. Ejecutar macros:
-
-- `ProcessDisplay`  
-- `ProcessSend`  
+   - `ProcessDisplay` (modo previsualización)
+   - `ProcessSend` (modo envío automático)
 
 ---
 
-# Arquitectura del Código
+## Arquitectura del Código
 
 | Módulo | Rol |
 |--------|-----|
-| **Hermes.bas** | Lógica principal, control de flujo |
-| **ProcessRow.bas** | Procesa cada fila (adjuntos, plantilla, envío) |
+| **hermes.bas** | Lógica principal, control de flujo |
+| **ProcessRow.bas** | Procesamiento por fila (adjuntos, plantilla, envío) |
 | **Utils.bas** | Construcción y aplicación de variables |
 | **Variables.bas** | Funciones genéricas reutilizables |
 
-Esta arquitectura permite:
-
-- Mantenimiento fácil  
-- Extensión sin romper funciones  
-- Colaboración en proyectos GitHub  
-- Integración continua en futuro  
+**Beneficios:**
+- Mantenimiento fácil
+- Extensión sin romper funciones
+- Colaboración en proyectos GitHub
+- Integración continua en futuro
 
 ---
 
-# Flujo de Procesamiento
+## Flujo de Procesamiento
 
 ![Flujo del sistema](docs/diagramas/FlujoGeneral/FlujoGeneral.svg)
 
-![Flujo del proceso](docs/diagramas/Procesar/procesar.svg)
+![Flujo del proceso](docs/diagramas/Procesar/Procesar.svg)
+
 ---
 
-# Ejemplo Práctico Completo
+## Ejemplo Práctico Completo
 
 ### 1. Datos en Excel:
 
@@ -180,77 +196,83 @@ Esta arquitectura permite:
 | factura02 | cliente2@x.com | | | Factura | factura.oft | Luis | 1200 |
 
 ### 2. Plantilla:
-
+```html
 Hola [NOMBRE],
 
 Tu factura adjunta tiene un total de [TOTAL].
 
 Saludos.
-
+```
 
 ### 3. Archivos en carpeta:
+```
 factura01.pdf
 factura02.pdf
-
+```
 
 ### 4. Resultado:
-
-- Correo enviado o previsualizado  
-- Plantilla con variables reemplazadas  
-- Adjuntos correctos  
-- Marca de procesado en columnas nuevas  
+- Correo enviado o previsualizado
+- Plantilla con variables reemplazadas
+- Adjuntos correctos
+- Marca de procesado en columnas nuevas
 
 ---
 
-# Preguntas Frecuentes (FAQ)
+## Preguntas Frecuentes (FAQ)
 
-### ¿Puedo usar imágenes en las plantillas?  
+**¿Puedo usar imágenes en las plantillas?**
 Sí. Outlook maneja HTML completo.
 
-### ¿Debe Outlook estar abierto?  
+**¿Debe Outlook estar abierto?**
 No, se abrirá automáticamente si es necesario.
 
-### ¿Funciona en Mac?  
+**¿Funciona en Mac?**
 No. Outlook COM automation solo funciona en Windows.
 
-### ¿Puedo enviar miles de correos?  
+**¿Puedo enviar miles de correos?**
 Sí, pero usa retardo entre correos para evitar bloqueos.
 
 ---
 
-# Troubleshooting
+## Troubleshooting
 
-### Outlook bloquea el envío  
-Revisa:  
-`Archivo → Centro de confianza → Configuración del programa`
+### Outlook bloquea el envío
+Revisa: `Archivo → Centro de confianza → Configuración del programa`
 
-### No encuentra la plantilla  
+### No encuentra la plantilla
 Verifica extensión `.oft` y ruta.
 
-### No adjunta archivos  
+### No adjunta archivos
 Revisa que el **nombre base** coincida (sin extensión).
 
 ---
 
-# Licencia
+## Contribuir
 
-Este proyecto está bajo **GNU AGPLv3**.  
-Consulta el archivo `LICENSE`.
-
----
-
-# Autor
-
-**Alex Herrera**  
- crowslayer@gmail.com  
+Las contribuciones son bienvenidas. Consulta [CONTRIBUTING.md](CONTRIBUTING.md) para más detalles.
 
 ---
 
-# Donaciones
+## Licencia
+
+Este proyecto está bajo **GNU AGPLv3**.
+Consulta el archivo [LICENSE](LICENSE).
+
+---
+
+## Autor
+
+**Alex Herrera**
+📧 crowslayer@gmail.com
+
+---
+
+## Donaciones
 
 Si deseas apoyar este proyecto:
 
-****
-<a href="https://www.paypal.com/donate/?hosted_button_id=3VLCPQZWUGACS"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg" alt="Donate"></a>
+<a href="https://www.paypal.com/donate/?hosted_button_id=3VLCPQZWUGACS">
+  <img src="https://img.shields.io/badge/Donate-PayPal-green.svg" alt="Donar vía PayPal">
+</a>
 
 ¡Gracias por contribuir!
