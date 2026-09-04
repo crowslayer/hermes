@@ -6,7 +6,7 @@
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-blue.svg)]()
 [![VBA](https://img.shields.io/badge/Language-VBA-red.svg)]()
 
-**Envío masivo profesional con plantillas .OFT, variables dinámicas y adjuntos automáticos.**
+**Automatización de Excel y Outlook para el envío de correos electrónicos personalizados con plantillas, variables dinámicas y archivos adjuntos..**
 
 <p align="center">
   <strong>🇪🇸 Español</strong> | <a href="README_EN.md">🇬🇧 English</a>
