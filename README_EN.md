@@ -6,7 +6,7 @@
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-blue.svg)]()
 [![VBA](https://img.shields.io/badge/Language-VBA-red.svg)]()
 
-** Excel + Outlook automation for sending personalized emails with templates, dynamic variables and attachments**
+**Excel + Outlook automation for sending personalized emails with templates, dynamic variables and attachments**
 
 <p align="center">
   <a href="README.md">🇪🇸 Español</a> | <strong>🇬🇧 English</strong>
